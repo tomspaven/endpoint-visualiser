@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <g id="pipe">
+        <line x1="50" y1="230" x2="50" y2="169" stroke="black" stroke-width="3pt" /> 
+        <line x1="52" y1="169" x2="70" y2="169" stroke="lightgreen" stroke-width="4pt" /> 
+        <line x1="50" y1="230" x2="50" y2="169" stroke="black" stroke-width="3pt" /> 
+        <line x1="69" y1="230" x2="69" y2="169" stroke="black" stroke-width="3pt" /> 
+    </g>
+  </defs>
+
+  <rect x="0" y="0" width="240" height="240" id="bg"
+    style="fill: white"/> 
+
+  <rect x="20" y="20" width="200" height="150" rx="15" id="endpoint" 
+     style="fill: lightgreen; stroke: black; stroke-width: 3" />
+  <rect x="40" y="10" width="160" height="25" rx="15" id="endpoint-title"
+    style="fill: black"/>
+  <text x="120" y="27" id="endpoint-label" text-anchor="middle"
+     style="fill: white; font-size: 16">Endpoint Title</text>
+
+  <use xlink:href="#pipe" id="inpipe" />
+  <use xlink:href="#pipe" x="119" id="outpipe" />
+
+  <text x="50" y="165" id="inarrow">In⬆</text>
+  <text x="165" y="165" id="inarrow">Out⬇</text>
+
+  <text x="120" y="95" text-anchor="middle" id="status-text"
+     style="fill: black; font-size: 16">Delayed Response 🐌!</text> 
+  <text x="120" y="112" text-anchor="middle" id="status-text"
+     style="fill: black; font-size: 16">(1000 ms)</text> 
+
+</svg>
