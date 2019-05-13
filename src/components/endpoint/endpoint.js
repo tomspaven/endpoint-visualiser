@@ -17,8 +17,7 @@ class Endpoint extends Component {
     let epid = this.props.epid
 
     return (
-    <div className={"Endpoint-" + epid}>
-
+    <g id={"Endpoint-" + epid}>
       <rect x={ox} y={oy+10} width="200" height="150" rx="15" id={"epbox-" + epid} 
         style={{fill: this.state.colour, stroke: 'black', strokeWidth: 3}} />
       <rect x={ox+20} y={oy} width="160" height="25" rx="15" id={"eptitle-" + epid}
@@ -34,7 +33,7 @@ class Endpoint extends Component {
       <text x={ox+100} y={oy+102} text-anchor="middle" id={"epstatusval-" + epid}
         style={{fill: 'black', fontSize: 16}}> {this.state.stateValue === "" ? "" : +"(" + this.state.stateValue + ")"}
       </text>       
-    </div>
+    </g>
    );
   }
 }
