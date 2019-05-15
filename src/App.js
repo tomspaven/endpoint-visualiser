@@ -4,18 +4,17 @@ import StatusBar from './components/statusbar'
 import EndpointPanel from './components/endpointPanel'
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-        color: 'white',
-        message: 'Initialising...',
-    }
-    //let self = this
+
+  state = {
+    color: 'white',
+    message: 'Initialising...',
+    endpoints: [],
   }
+    //let self = this
 
   componentDidMount() {
     const exceptionHandler = () => {
-      var numRetries = 5
+      let numRetries = 5
       const countDown = () => {
         this.setState({message: `Server fetch failed, retrying in ${numRetries} seconds...`, color: 'red'})
         numRetries--
@@ -24,23 +23,25 @@ class App extends Component {
           return
         }
       }
-      var countDownTimer = setInterval(countDown, 995)
+      const countDownTimer = setInterval(countDown, 995)
     }
 
     const fetchEndpointTopology = () => {
       this.setState({message: "Attempting to fetch endpoint topology data", color: 'yellow'})
       fetch('http://localhost:3031/endpoints')
       .then(result => result.json())
-      .then(() => {
-          //this.setState({endpoints: data})
-          this.setState({message: "Got endpoint topology data from server 👍", color: '#00FF00'}) 
+      .then(data => {
+          this.setState({
+            message: "Got endpoint topology data from server 👍", color: '#00FF00',
+            endpoints: data,
+          }) 
           clearInterval(fetchTopologyTimer)
           return
       })
       .catch(exceptionHandler)
    }
 
-    var fetchTopologyTimer = setInterval(fetchEndpointTopology, 6000)
+    const fetchTopologyTimer = setInterval(fetchEndpointTopology, 6000)
   }
 
   render() {
@@ -49,7 +50,7 @@ class App extends Component {
       <header className="App-header">
         <h1 className="App-title">Endpoint Visualiser</h1>
       </header>
-      <EndpointPanel />
+      <EndpointPanel endpoints={this.state.endpoints}/>
       <StatusBar color={this.state.color} message={this.state.message} />
     </div>
    );

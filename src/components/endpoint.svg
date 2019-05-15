@@ -3,8 +3,8 @@
     <g id="pipe">
         <line x1="30" y1="220" x2="30" y2="159" stroke="black" stroke-width="3pt" /> 
         <line x1="32" y1="159" x2="50" y2="159" stroke="lightgreen" stroke-width="4pt" /> 
-        <line x1="30" y1="220" x2="30" y2="159" stroke="black" stroke-width="3pt" /> 
         <line x1="49" y1="220" x2="49" y2="159" stroke="black" stroke-width="3pt" /> 
+        <path d="M39.5,220v-61" stroke="black" stroke-width="1" fill="none"/>
     </g>
   </defs>
 
