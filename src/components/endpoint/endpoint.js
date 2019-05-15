@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-//import Pipe from './pipe'
+import {Pipe, PipeWidth, PipeHeight} from './pipe'
 
 const epWidth = 200, epHeight = 150;
 
@@ -33,13 +33,13 @@ class Endpoint extends Component {
       <text x={ox+100} y={oy+102} text-anchor="middle" id={"epstatusval-" + epid}
         style={{fill: 'black', fontSize: 16}}> {this.state.stateValue === "" ? "" : +"(" + this.state.stateValue + ")"}
       </text> 
-      {//<Pipe x={ox} y ={oy} animCharacter="⬆" colour={this.state.colour} isOut='false' id={"inpipe-" + epid}/>
-      //<Pipe x={ox} y ={oy} animCharacter="⬇" colour={this.state.colour} isOut='true' id={"outpipe-" + epid}/> 
+      <Pipe x={ox} y ={oy} animCharacter="⬆" colour={this.state.colour} isOut={false} id={"inpipe-" + epid}/>
+      <Pipe x={ox} y ={oy} animCharacter="⬇" colour={this.state.colour} isOut={true} id={"outpipe-" + epid}/> 
     }   
     </g>
    );
   }
-  static get epHeight() { return epHeight; }
+  static get epHeight() { return epHeight + PipeHeight(); }
   static get epWidth() { return epWidth;}
   
 }

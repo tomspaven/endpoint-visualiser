@@ -52,7 +52,7 @@ class EndpointPanel extends Component {
     <div className="Endpoint-Panel">
         <svg width={window.innerWidth} height={window.innerHeight - EndpointPanel.statusHeight}>
           {cells}
-          {/*<text x="50" y="50">Max Rows: {this.state.maxRows} Max Cols: {this.state.maxCols}</text>*/}
+          {<text x="50" y="50">Max Rows: {this.state.maxRows} Max Cols: {this.state.maxCols}</text>}
         </svg>
     </div>
     );
