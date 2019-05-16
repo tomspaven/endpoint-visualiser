@@ -41,18 +41,19 @@ class EndpointPanel extends Component {
       const ep = {
         epid: endpoint.id ? endpoint.id : 0, 
         title: endpoint.title ? endpoint.title : "Unknown Endpoint",
+        maxConns: endpoint.maxConns ? endpoint.maxConns : 25,
         cellx: idx % this.state.maxCols,
         celly: Math.floor(idx/this.state.maxCols),
       }
       const calcPosition = (dimension, padding, cellIdx) => {return (padding*(cellIdx+1)) + (dimension*cellIdx)}
-      return <Endpoint x={calcPosition(w, xp, ep.cellx)} y={calcPosition(h, yp, ep.celly)} epid={ep.epid} title={ep.title}/> 
+      return <Endpoint x={calcPosition(w, xp, ep.cellx)} y={calcPosition(h, yp, ep.celly)} maxConns={ep.maxConns} epid={ep.epid} title={ep.title}/> 
     });
   
     return (
     <div className="Endpoint-Panel">
         <svg width={window.innerWidth} height={window.innerHeight - EndpointPanel.statusHeight}>
           {cells}
-          {<text x="50" y="50">Max Rows: {this.state.maxRows} Max Cols: {this.state.maxCols}</text>}
+          {/*<text x="50" y="50">Max Rows: {this.state.maxRows} Max Cols: {this.state.maxCols}</text>*/}
         </svg>
     </div>
     );

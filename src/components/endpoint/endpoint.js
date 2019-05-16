@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
 import {Pipe, PipeWidth, PipeHeight} from './pipe'
+import Connections from '../connections/connections'
 
 const epWidth = 200, epHeight = 150;
 
 class Endpoint extends Component {
-  // Props:  epid, x, y, title
+  // Props:  epid, x, y, title, maxConns
   state = {
     stateMessage: 'Waiting for conns 💤',
     stateValue: '',
     colour: 'grey',
+    numberConnections: 0,
   }
 
   render() {  
@@ -33,9 +35,9 @@ class Endpoint extends Component {
       <text x={ox+100} y={oy+102} text-anchor="middle" id={"epstatusval-" + epid}
         style={{fill: 'black', fontSize: 16}}> {this.state.stateValue === "" ? "" : +"(" + this.state.stateValue + ")"}
       </text> 
-      <Pipe x={ox} y ={oy} animCharacter="⬆" colour={this.state.colour} isOut={false} id={"inpipe-" + epid}/>
-      <Pipe x={ox} y ={oy} animCharacter="⬇" colour={this.state.colour} isOut={true} id={"outpipe-" + epid}/> 
-    }   
+      <Connections x={ox} y={oy} maxConns={this.props.maxConns} epid={epid} />
+      <Pipe x={ox} y ={oy} animCharacter="❤️" colour={this.state.colour} isOut={false} id={"inpipe-" + epid}/>
+      <Pipe x={ox} y ={oy} animCharacter="❤️" colour={this.state.colour} isOut={true} id={"outpipe-" + epid}/>   
     </g>
    );
   }

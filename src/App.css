@@ -11,7 +11,9 @@
 }
 
 .App-title {
-  background-color: black,
+  background-color: black;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
   
