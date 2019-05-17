@@ -29,7 +29,7 @@ class App extends Component {
     const fetchEndpointTopology = () => {
       this.setState({message: "Attempting to fetch endpoint topology data", color: 'yellow'})
       fetch('http://localhost:3031/endpoints')
-      .then(result => result.json())
+      .then(result => result.json() )
       .then(data => {
           this.setState({
             message: "Got endpoint topology data from server 👍", color: '#00FF00',

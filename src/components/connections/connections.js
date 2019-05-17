@@ -18,14 +18,14 @@ export class Connections extends Component {
 
     const connections = this.state.connections.map((connection,idx) => {
 
-        const firstX = (maxRows % 2) == 0 ?
+        const firstX = (maxRows % 2) === 0 ?
             centreX - ((maxRows/2) * (ConnDimensions() + connectionHorizontalPad)) :
             centreX - ((Math.floor(maxRows / 2) * ConnDimensions()) + (ConnDimensions() * 0.5) + ((maxRows -1) * connectionHorizontalPad));
 
         const x = firstX + ((idx % maxCols) * (ConnDimensions() + connectionHorizontalPad))
         const rowIdx = Math.floor(idx/maxRows) % maxRows
         const y = this.props.y + 183 + (rowIdx * ConnDimensions()) + (rowIdx * connectionVerticalPad)
-        return <Connection x={x} y={y} on={connection.on} />
+        return <Connection x={x} y={y} on={connection.on} key={idx}/>
     });
 
     const textYOffset = this.props.y + Endpoint.epHeight - 33

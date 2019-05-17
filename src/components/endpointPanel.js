@@ -46,8 +46,9 @@ class EndpointPanel extends Component {
         celly: Math.floor(idx/this.state.maxCols),
       }
       const calcPosition = (dimension, padding, cellIdx) => {return (padding*(cellIdx+1)) + (dimension*cellIdx)}
-      return <Endpoint x={calcPosition(w, xp, ep.cellx)} y={calcPosition(h, yp, ep.celly)} maxConns={ep.maxConns} epid={ep.epid} title={ep.title}/> 
-    });
+      const socket = new WebSocket('ws://localhost:3031/websocketRegistration/' + ep.epid)
+      return <Endpoint x={calcPosition(w, xp, ep.cellx)} y={calcPosition(h, yp, ep.celly)} maxConns={ep.maxConns} epid={ep.epid} title={ep.title} socket={socket} key={ep.epid}/> 
+    }) 
   
     return (
     <div className="Endpoint-Panel">
