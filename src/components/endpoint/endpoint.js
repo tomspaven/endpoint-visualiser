@@ -6,7 +6,6 @@ const epWidth = 200, epHeight = 150;
 
 class Endpoint extends Component {
   // Props:  epid, x, y, title, maxConns
-  
   state = {
     stateMessage: 'Waiting for conns 💤',
     stateValue: '',
@@ -25,6 +24,14 @@ class Endpoint extends Component {
       })
     }
 
+    const setStateEndpointDisconnected = () => {
+      this.setState({
+        colour: 'grey',
+        numberConnections: 0,
+        stateMessage: 'Waiting for conns 💤'
+      })
+    }
+
     let newsocket = this.state.socket
     newsocket.onopen = () => console.log("Websocket connected for endpoint " + this.props.epid) 
     newsocket.onmessage = event => {
@@ -33,6 +40,9 @@ class Endpoint extends Component {
       console.log(msg)
       if (msg.id === "EndpointConnected") {
         setStateEndpointConnected(msg)
+      }
+      if (msg.id === "EndpointDisconnected") {
+        setStateEndpointDisconnected()
       }
     }
 
