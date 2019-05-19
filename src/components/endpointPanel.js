@@ -33,9 +33,12 @@ class EndpointPanel extends Component {
     this.render()
   }
   
+  
+
+
   render() {
     const w = Endpoint.epWidth, h = Endpoint.epHeight,
-          xp = EndpointPanel.epXPad, yp = EndpointPanel.epYPad;
+          xp = EndpointPanel.epXPad, yp = EndpointPanel.epYPad
 
     const cells = this.props.endpoints.map((endpoint, idx) => {
       const ep = {
@@ -47,6 +50,7 @@ class EndpointPanel extends Component {
       }
       const calcPosition = (dimension, padding, cellIdx) => {return (padding*(cellIdx+1)) + (dimension*cellIdx)}
       const socket = new WebSocket('ws://localhost:3031/websocketRegistration/' + ep.epid)
+
       return <Endpoint x={calcPosition(w, xp, ep.cellx)} y={calcPosition(h, yp, ep.celly)} maxConns={ep.maxConns} epid={ep.epid} title={ep.title} socket={socket} key={ep.epid}/> 
     }) 
   

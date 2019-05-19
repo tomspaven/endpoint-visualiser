@@ -25,8 +25,9 @@ export class Connections extends Component {
         const x = firstX + ((idx % maxCols) * (ConnDimensions() + connectionHorizontalPad))
         const rowIdx = Math.floor(idx/maxRows) % maxRows
         const y = this.props.y + 183 + (rowIdx * ConnDimensions()) + (rowIdx * connectionVerticalPad)
-        return <Connection x={x} y={y} on={connection.on} key={idx}/>
-    });
+        const isOn = (idx+1) <= this.props.numConns ? true : false
+        return <Connection x={x} y={y} on={isOn} key={idx}/>
+    }); 
 
     const textYOffset = this.props.y + Endpoint.epHeight - 33
     const textXOffset = centreX - 32 

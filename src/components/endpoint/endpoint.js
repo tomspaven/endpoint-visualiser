@@ -14,7 +14,33 @@ class Endpoint extends Component {
     numberConnections: 0,
     socket: this.props.socket,
   }
-  //const websocketRegisterURL = 'http://localhost:3031/websocketRegistration/' + this.props.epid
+  
+  componentDidMount() {
+
+    const setStateEndpointConnected = msg => {
+      this.setState({
+        colour: 'green',
+        numberConnections: msg.numConnections,
+        stateMessage: 'Endpoint Connected 👍'
+      })
+    }
+
+    let newsocket = this.state.socket
+    newsocket.onopen = () => console.log("Websocket connected for endpoint " + this.props.epid) 
+    newsocket.onmessage = event => {
+      console.log("Websocket message received for endpoint " + this.props.epid + "message: ")
+      const msg = JSON.parse(event.data)
+      console.log(msg)
+      if (msg.id === "EndpointConnected") {
+        setStateEndpointConnected(msg)
+      }
+    }
+
+    this.setState({
+      socket: newsocket
+    })
+  }
+
   render() {  
     const ox = this.props.x,
           oy = this.props.y,
@@ -37,7 +63,7 @@ class Endpoint extends Component {
       <text x={ox+100} y={oy+102} textAnchor="middle" id={"epstatusval-" + epid}
         style={{fill: 'black', fontSize: 16}}> {this.state.stateValue === "" ? "" : +"(" + this.state.stateValue + ")"}
       </text> 
-      <Connections x={ox} y={oy} maxConns={this.props.maxConns} epid={epid} />
+      <Connections x={ox} y={oy} maxConns={this.props.maxConns} epid={epid} numConns={this.state.numberConnections}/>
       <Pipe x={ox} y ={oy} animCharacter="❤️" colour={this.state.colour} isOut={false} id={"inpipe-" + epid}/>
       <Pipe x={ox} y ={oy} animCharacter="❤️" colour={this.state.colour} isOut={true} id={"outpipe-" + epid}/>   
     </g>
