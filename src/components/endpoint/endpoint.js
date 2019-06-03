@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Pipe, PipeHeight} from './pipe'
 import Connections from '../connections/connections' 
+import { merge } from 'popmotion';
 //import TransitionGroup from 'react-transition-group/TransitionGroup'
 
 const epWidth = 200, epHeight = 150;
@@ -42,7 +43,7 @@ class Endpoint extends Component {
 
     const setStateNewTraffic = (direction, msg) => {
 
-      const pipeId = (this.state.currentPipe % 3) + 1
+      const pipeId = (this.state.currentPipe % 10)
       
       direction === "Request" ? 
         this.setState({
@@ -57,16 +58,37 @@ class Endpoint extends Component {
         })
     }
 
+    const noDelay = 0
+    const dontRespond = -1
+
     const setStateTrafficImpaired = msg => {
+      if (msg.time === noDelay) {
+        this.setState({
+          colour: '#7fffa3',
+          stateMessage: 'Endpoint Connected 👍',
+          stateValue: '',
+        })
+        return
+      }  
+
+      let message = 'Delayed Response 😬'
+      let messageValue = msg.time + 'ms'
+      let colourScale = msg.time / msg.worstResponse
+      if (msg.time === dontRespond) {
+        msg.time = 0
+        message = 'Not responding 😵'
+        messageValue = ''
+        colourScale = 1
+      }
+
       const maxRGBYellow = 255
-      const colourScale = msg.time === -1 ? maxRGBYellow : (msg.worstResponse === 0 ? 1 : msg.time / msg.worstResponse)
-      const minRGBYellow = 100
+      const minRGBYellow = 0
       const ourRGBYellow = maxRGBYellow - Math.floor((maxRGBYellow - minRGBYellow) * colourScale)
       const rgbString = "rgb(255," + ourRGBYellow + ",0)"
       this.setState({
         colour: rgbString,
-        stateMessage: 'Delayed Response 😬',
-        stateValue: msg.time + "ms",
+        stateMessage: message,
+        stateValue: messageValue,
       })
     }
 
@@ -102,13 +124,13 @@ class Endpoint extends Component {
           oy = this.props.y,
           epid = this.props.epid
 
-    const numPipes = 3
+    const numPipes = 10
     const inpipes = [...Array(numPipes)].map((_, i) => {
-        return <Pipe x={ox + (i*2)} y={oy} animCharacter={"RQ" === this.state.direction && i === this.state.currentPipe ? this.state.animCharIn : ""} isOut={false} id ={"inpipe-" + epid + "-" + this.state.currentPipe}/> 
+        return <Pipe x={ox} y={oy} animCharacter={"RQ" === this.state.direction && i === this.state.currentPipe ? this.state.animCharIn : ""} isOut={false} id ={"inpipe-" + epid + "-" + this.state.currentPipe}/> 
     })
 
     const outpipes = [...Array(numPipes)].map((_, i) => {
-      return <Pipe x={ox + (i*2)} y={oy} animCharacter={"RS" === this.state.direction && i === this.state.currentPipe ? this.state.animCharOut : ""} isOut={true} id ={"outpipe-" + epid + "-" + this.state.currentPipe}/> 
+      return <Pipe x={ox} y={oy} animCharacter={"RS" === this.state.direction && i === this.state.currentPipe ? this.state.animCharOut : ""} isOut={true} id ={"outpipe-" + epid + "-" + this.state.currentPipe}/> 
     })
 
     return (

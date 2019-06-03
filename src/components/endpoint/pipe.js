@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
-import {TweenMax} from 'gsap'
+import React, { Component } from 'react'
+import { TweenLite, TimelineLite, Power1 } from 'gsap'
 
-export const PipeWidth = () => {return 19}
-export const PipeHeight = () => {return 60}
+export const PipeWidth = () => { return 19 }
+export const PipeHeight = () => { return 60 }
 
 /*const AnimatedChar = posed.text({
     bottom: {
@@ -20,7 +20,7 @@ export const PipeHeight = () => {return 60}
 })*/
 
 export class Pipe extends Component {
-//transition: {duration: 300}
+    //transition: {duration: 300}
     state = {
         done: false,
         goodbye: false,
@@ -28,7 +28,7 @@ export class Pipe extends Component {
         pipe: null,
         pipeTween: null,
     }
-    
+
     /*componentWillReceiveProps(newProps, oldState) {
         if(newProps.animCharacter !== oldState.char) {
             this.setState({
@@ -50,7 +50,7 @@ export class Pipe extends Component {
 
     shouldComponentUpdate(newProps, nextState) {
         console.log("State Char: " + this.state.char + " , props char: " + newProps.animCharacter)
-        if(this.state.char !== newProps.animCharacter) {
+        if (this.state.char !== newProps.animCharacter) {
             console.log(newProps.id + "RENDERING")
             return true
         }
@@ -59,16 +59,16 @@ export class Pipe extends Component {
     }
 
     componentWillReceiveProps(newProps, oldState) {
-        if(newProps.animCharacter !== "" &&
-           newProps.animCharacter !== oldState.char) {
-        
+        if (newProps.animCharacter !== "" &&
+            newProps.animCharacter !== oldState.char) {
+
             let charXOffset = 30
             const charYOffset = 225, outAdditionalXOffset = 120
-    
+
             let startY = this.props.y + charYOffset
             const pipeHeight = 50
             let endY = startY - pipeHeight
-    
+
             if (this.props.isOut) {
                 charXOffset += outAdditionalXOffset
                 let tmp = startY
@@ -79,39 +79,44 @@ export class Pipe extends Component {
 
 
             const animationTimeSeconds = 0.3
-            //const fadeOutSeconds = 0.2
+            const fadeOutSeconds = 0.1
+
+            const animation = new TimelineLite()
+            animation.fromTo(this.state.pipe, animationTimeSeconds, {
+                    opacity: 1,
+                    x: startX,
+                    y: startY,
+                }, {
+                    opacity: 1,
+                    x: startX,
+                    y: endY,
+                })
+                .to(this.state.pipe, fadeOutSeconds, {
+                    opacity: 0,
+                    ease: Power1.easeInOut,
+                })
+
             this.setState({
-                pipeTween: TweenMax.fromTo(this.state.pipe, animationTimeSeconds, {
-                                            x: startX, 
-                                            y: startY,
-                                        }, {
-                                            x: startX, 
-                                            y: endY,
-                                        })
-                                    //.to(this.state.pipe, fadeOutSeconds, {
-                                    //        opacity: 0,
-                                    //        ease: Power1.easeInOut,
-                                    //    })
-                                    .play()
-            })  
+                pipeTween: animation.play()
+            })
 
             // Set a timer to reset the character state to empty so the 
             // compoment can use this to determine whether to rerender
             // or not
-            setTimeout(() => {this.setState({char: ''})}, animationTimeSeconds)
-            
+            setTimeout(() => { this.setState({ char: '' }) }, animationTimeSeconds)
+
         }
     }
 
-    render() { 
+    render() {
         this.setState({
             char: this.props.animCharacter,
         })
 
         return (
-        //<text style={{fill: 'black', fontSize: 16}} ref={text => this.state.pipe = text}>{this.props.animCharacter}</text> 
-        <text style={{fill: 'black', fontSize: 16}} ref={text => this.setState({pipe: text})}>{this.props.animCharacter}</text> 
+            //<text style={{fill: 'black', fontSize: 16}} ref={text => this.state.pipe = text}>{this.props.animCharacter}</text> 
+            <text style={{ fill: 'black', fontSize: 16 }} ref={text => this.setState({ pipe: text })}>{this.props.animCharacter}</text>
         )
     }
- 
+
 }
