@@ -1,54 +1,117 @@
-import React from 'react'
+import React, {Component} from 'react'
+import {TweenMax} from 'gsap'
 
 export const PipeWidth = () => {return 19}
 export const PipeHeight = () => {return 60}
-export const Pipe = props => {
-    const pipeYOffset = 159,
-          inputPipeXOffset = 30, 
-          outputPipeXOffset = inputPipeXOffset + 92;
 
-    let vLineX = props.x+inputPipeXOffset,
-        vLineY = props.y+pipeYOffset,
-        xWireOffset =  (vLineX + (vLineX+PipeWidth()))/2
-    const yWireOffset = vLineY + PipeHeight() + 1
+/*const AnimatedChar = posed.text({
+    bottom: {
+        opacity: 1,
+        y: (props) => props.startY
+    },
+    top: {
+        opacity: 1,
+        y: (props) => props.endY,
+        transition: {duration: 1000}
+    },
+    disappear: {
+        opacity: 0,
+    }
+})*/
+
+export class Pipe extends Component {
+//transition: {duration: 300}
+    state = {
+        done: false,
+        goodbye: false,
+        char: '',
+        pipe: null,
+        pipeTween: null,
+    }
     
-    let wireName = "inpipeWire-"
-    let animProperties = {
-        keyPoints: "",
-        keyTimes: "",
-        calcMode: "",
+    /*componentWillReceiveProps(newProps, oldState) {
+        if(newProps.animCharacter !== oldState.char) {
+            this.setState({
+                done: false,
+                goodbye: false,
+                char: newProps.animCharacter,
+            })
+    
+            const doneTimer = () => {
+                this.setState({done: true})
+                const disappearTimer = () => {
+                    this.setState({goodbye: true})
+                }
+                setTimeout(disappearTimer, 1000)
+            }
+            setTimeout(doneTimer, 1)
+        }
+    }*/
+
+    shouldComponentUpdate(newProps, nextState) {
+        console.log("State Char: " + this.state.char + " , props char: " + newProps.animCharacter)
+        if(this.state.char !== newProps.animCharacter) {
+            console.log(newProps.id + "RENDERING")
+            return true
+        }
+        console.log(newProps.id + "Not RENDERING YEAH!")
+        return false
     }
 
-    // Changes in confg data for output pipe - animation needs to go across the wire
-    // in the other direction
-    if (props.isOut) {
-        vLineX += outputPipeXOffset
-        xWireOffset += outputPipeXOffset
-        wireName = "outpipeWire-"
-        animProperties = {
-            keyPoints: "1;0",
-            keyTimes: "0;1",
-            calcMode: "linear",        
+    componentWillReceiveProps(newProps, oldState) {
+        if(newProps.animCharacter !== "" &&
+           newProps.animCharacter !== oldState.char) {
+        
+            let charXOffset = 30
+            const charYOffset = 225, outAdditionalXOffset = 120
+    
+            let startY = this.props.y + charYOffset
+            const pipeHeight = 50
+            let endY = startY - pipeHeight
+    
+            if (this.props.isOut) {
+                charXOffset += outAdditionalXOffset
+                let tmp = startY
+                startY = endY
+                endY = tmp
+            }
+            const startX = this.props.x + charXOffset
+
+
+            const animationTimeSeconds = 0.3
+            //const fadeOutSeconds = 0.2
+            this.setState({
+                pipeTween: TweenMax.fromTo(this.state.pipe, animationTimeSeconds, {
+                                            x: startX, 
+                                            y: startY,
+                                        }, {
+                                            x: startX, 
+                                            y: endY,
+                                        })
+                                    //.to(this.state.pipe, fadeOutSeconds, {
+                                    //        opacity: 0,
+                                    //        ease: Power1.easeInOut,
+                                    //    })
+                                    .play()
+            })  
+
+            // Set a timer to reset the character state to empty so the 
+            // compoment can use this to determine whether to rerender
+            // or not
+            setTimeout(() => {this.setState({char: ''})}, animationTimeSeconds)
+            
         }
     }
 
-    return (
-        <g>
-            {/*<line x1={vLineX}           y1={vLineY} x2={vLineX}             y2={vLineY + PipeHeight()} stroke="black" stroke-width="3pt" /> */}
-            {/*<line x1={vLineX+lineWidth} y1={vLineY} x2={vLineX + PipeWidth()} y2={vLineY}              stroke={props.colour} stroke-width="4pt" />*/} 
-            {/*<line x1={vLineX+PipeWidth()} y1={vLineY} x2={vLineX + PipeWidth()} y2={vLineY + PipeHeight()} stroke="black" stroke-width="3pt" /> */}
-            <path d={"M" + xWireOffset +","+ yWireOffset + "v-"+ PipeHeight()} stroke="black" strokeWidth="1" fill="none" id={wireName+props.id}/>
-            <text textAnchor="middle" alignmentBaseline="middle">
-                {props.animCharacter}
-                {/*<animateMotion dur="0.4s" repeatCount="indefinite" keyPoints={animProperties.keyPoints} keyTimes={animProperties.keyTimes} calcMode={animProperties.calcMode}>
-                    <mpath xlinkHref={"#"+wireName+props.id} />
-    </animateMotion>*/}               
-            </text>
-        </g>
-    )
+    render() { 
+        this.setState({
+            char: this.props.animCharacter,
+        })
+
+        return (
+        //<text style={{fill: 'black', fontSize: 16}} ref={text => this.state.pipe = text}>{this.props.animCharacter}</text> 
+        <text style={{fill: 'black', fontSize: 16}} ref={text => this.setState({pipe: text})}>{this.props.animCharacter}</text> 
+        )
+    }
+ 
 }
-
-
-//export default PipeWidth;
-//export default PipeHeight;
-//export default Pipe

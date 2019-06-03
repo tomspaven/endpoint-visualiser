@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Pipe, PipeHeight} from './pipe'
-import Connections from '../connections/connections'
+import Connections from '../connections/connections' 
+//import TransitionGroup from 'react-transition-group/TransitionGroup'
 
 const epWidth = 200, epHeight = 150;
 
@@ -12,15 +13,20 @@ class Endpoint extends Component {
     colour: 'grey',
     numberConnections: 0,
     socket: this.props.socket,
+    animCharIn: '',
+    animCharOut: '',
+    currentPipe: 0,
+    direction: '',
   }
   
   componentDidMount() {
 
     const setStateEndpointConnected = msg => {
       this.setState({
-        colour: 'green',
+        colour: '#7fffa3',
         numberConnections: msg.numConnections,
-        stateMessage: 'Endpoint Connected 👍'
+        stateMessage: 'Endpoint Connected 👍',
+        stateValue: '',
       })
     }
 
@@ -28,21 +34,61 @@ class Endpoint extends Component {
       this.setState({
         colour: 'grey',
         numberConnections: 0,
-        stateMessage: 'Waiting for conns 💤'
+        stateMessage: 'Waiting for conns 💤',
+        animChar: '',
+        stateValue: '',
+      })
+    }
+
+    const setStateNewTraffic = (direction, msg) => {
+
+      const pipeId = (this.state.currentPipe % 3) + 1
+      
+      direction === "Request" ? 
+        this.setState({
+          animCharIn: msg.character,
+          currentPipe: pipeId,
+          direction: 'RQ',
+        }) : 
+        this.setState({
+          animCharOut: msg.character,
+          currentPipe: pipeId,
+          direction: 'RS',
+        })
+    }
+
+    const setStateTrafficImpaired = msg => {
+      const maxRGBYellow = 255
+      const colourScale = msg.time === -1 ? maxRGBYellow : (msg.worstResponse === 0 ? 1 : msg.time / msg.worstResponse)
+      const minRGBYellow = 100
+      const ourRGBYellow = maxRGBYellow - Math.floor((maxRGBYellow - minRGBYellow) * colourScale)
+      const rgbString = "rgb(255," + ourRGBYellow + ",0)"
+      this.setState({
+        colour: rgbString,
+        stateMessage: 'Delayed Response 😬',
+        stateValue: msg.time + "ms",
       })
     }
 
     let newsocket = this.state.socket
     newsocket.onopen = () => console.log("Websocket connected for endpoint " + this.props.epid) 
     newsocket.onmessage = event => {
-      console.log("Websocket message received for endpoint " + this.props.epid + "message: ")
       const msg = JSON.parse(event.data)
-      console.log(msg)
       if (msg.id === "EndpointConnected") {
         setStateEndpointConnected(msg)
       }
       if (msg.id === "EndpointDisconnected") {
         setStateEndpointDisconnected()
+      }
+      if (msg.id === "TrafficRequest") {
+        console.log("In traffic request (" + this.props.epid + ") - " + msg.character)
+        setStateNewTraffic("Request", msg)
+      }
+      if (msg.id === "TrafficResponse") {
+        setStateNewTraffic("Response", msg)
+      }
+      if (msg.id === "EndpointImpaired") {
+        setStateTrafficImpaired(msg)
       }
     }
 
@@ -51,10 +97,19 @@ class Endpoint extends Component {
     })
   }
 
-  render() {  
+  render() {
     const ox = this.props.x,
           oy = this.props.y,
-          epid = this.props.epid;
+          epid = this.props.epid
+
+    const numPipes = 3
+    const inpipes = [...Array(numPipes)].map((_, i) => {
+        return <Pipe x={ox + (i*2)} y={oy} animCharacter={"RQ" === this.state.direction && i === this.state.currentPipe ? this.state.animCharIn : ""} isOut={false} id ={"inpipe-" + epid + "-" + this.state.currentPipe}/> 
+    })
+
+    const outpipes = [...Array(numPipes)].map((_, i) => {
+      return <Pipe x={ox + (i*2)} y={oy} animCharacter={"RS" === this.state.direction && i === this.state.currentPipe ? this.state.animCharOut : ""} isOut={true} id ={"outpipe-" + epid + "-" + this.state.currentPipe}/> 
+    })
 
     return (
     <g id={"Endpoint-" + epid}>
@@ -71,11 +126,11 @@ class Endpoint extends Component {
       <text x={ox+100} y={oy+85} textAnchor="middle" id={"epstatus-" + epid}
         style={{fill: 'black', fontSize: 16}}>{this.state.stateMessage}</text> 
       <text x={ox+100} y={oy+102} textAnchor="middle" id={"epstatusval-" + epid}
-        style={{fill: 'black', fontSize: 16}}> {this.state.stateValue === "" ? "" : +"(" + this.state.stateValue + ")"}
+        style={{fill: 'black', fontSize: 16}}> {this.state.stateValue === "" ? "" : "(" + this.state.stateValue + ")"}
       </text> 
       <Connections x={ox} y={oy} maxConns={this.props.maxConns} epid={epid} numConns={this.state.numberConnections}/>
-      <Pipe x={ox} y ={oy} animCharacter="❤️" colour={this.state.colour} isOut={false} id={"inpipe-" + epid}/>
-      <Pipe x={ox} y ={oy} animCharacter="❤️" colour={this.state.colour} isOut={true} id={"outpipe-" + epid}/>   
+      {inpipes}
+      {outpipes}
     </g>
    );
   }

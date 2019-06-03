@@ -33,9 +33,6 @@ class EndpointPanel extends Component {
     this.render()
   }
   
-  
-
-
   render() {
     const w = Endpoint.epWidth, h = Endpoint.epHeight,
           xp = EndpointPanel.epXPad, yp = EndpointPanel.epYPad
