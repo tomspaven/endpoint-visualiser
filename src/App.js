@@ -9,6 +9,7 @@ class App extends Component {
     color: 'white',
     message: 'Initialising...',
     endpoints: [],
+    registered: false,
   }
     //let self = this
 
@@ -27,18 +28,20 @@ class App extends Component {
     }
 
     const fetchEndpointTopology = () => {
-      this.setState({message: "Attempting to fetch endpoint topology data", color: 'yellow'})
-      fetch('http://localhost:3031/endpoints')
-      .then(result => result.json() )
-      .then(data => {
-          this.setState({
-            message: "Got endpoint topology data from server 👍", color: '#00FF00',
-            endpoints: data,
-          }) 
-          clearInterval(fetchTopologyTimer)
-          return
-      })
-      .catch(exceptionHandler)
+      if (!this.state.registered) {
+        this.setState({message: "Attempting to fetch endpoint topology data", color: 'yellow'})
+        fetch('http://localhost:3031/endpoints')
+        .then(result => result.json() )
+        .then(data => {
+            this.setState({
+              message: "Got endpoint topology data from server 👍", color: '#00FF00',
+              endpoints: data,
+            }) 
+            clearInterval(fetchTopologyTimer)
+            return
+        })
+        .catch(exceptionHandler)
+      }
    }
 
     const fetchTopologyTimer = setInterval(fetchEndpointTopology, 6000)

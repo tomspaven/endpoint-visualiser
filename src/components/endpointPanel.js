@@ -12,7 +12,7 @@ class EndpointPanel extends Component {
     maxCols: this.calcMax(window.innerWidth, Endpoint.epWidth, EndpointPanel.epXPad),
     maxRows: this.calcMax(window.innerHeight - EndpointPanel.statusHeight, Endpoint.epHeight, EndpointPanel.epYPad),
   }
-  updateWindowDimensions = this.updateWindowDimensions.bind(this)
+  //updateWindowDimensions = this.updateWindowDimensions.bind(this)
   //let self = this
 
 
@@ -25,12 +25,11 @@ class EndpointPanel extends Component {
     window.removeEventListener('resize', this.updateWindowDimensions)
   }
 
-  updateWindowDimensions() {
+  updateWindowDimensions = () => {
     this.setState({
       maxCols: this.calcMax(window.innerWidth, Endpoint.epWidth, EndpointPanel.epXPad),
       maxRows: this.calcMax(window.innerHeight - EndpointPanel.statusHeight, Endpoint.epHeight, EndpointPanel.epYPad),
     })
-    this.render()
   }
   
   render() {
@@ -49,7 +48,7 @@ class EndpointPanel extends Component {
       const socket = new WebSocket('ws://localhost:3031/websocketRegistration/' + ep.epid)
 
       return <Endpoint x={calcPosition(w, xp, ep.cellx)} y={calcPosition(h, yp, ep.celly)} maxConns={ep.maxConns} epid={ep.epid} title={ep.title} socket={socket} key={ep.epid}/> 
-    }) 
+     }) 
   
     return (
     <div className="Endpoint-Panel">

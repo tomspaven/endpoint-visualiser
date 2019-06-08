@@ -1,26 +1,11 @@
 import React, { Component } from 'react'
-import { TweenLite, TimelineLite, Power1 } from 'gsap'
+import { TimelineLite, Power1 } from 'gsap'
 
 export const PipeWidth = () => { return 19 }
 export const PipeHeight = () => { return 60 }
 
-/*const AnimatedChar = posed.text({
-    bottom: {
-        opacity: 1,
-        y: (props) => props.startY
-    },
-    top: {
-        opacity: 1,
-        y: (props) => props.endY,
-        transition: {duration: 1000}
-    },
-    disappear: {
-        opacity: 0,
-    }
-})*/
-
 export class Pipe extends Component {
-    //transition: {duration: 300}
+    
     state = {
         done: false,
         goodbye: false,
@@ -29,32 +14,10 @@ export class Pipe extends Component {
         pipeTween: null,
     }
 
-    /*componentWillReceiveProps(newProps, oldState) {
-        if(newProps.animCharacter !== oldState.char) {
-            this.setState({
-                done: false,
-                goodbye: false,
-                char: newProps.animCharacter,
-            })
-    
-            const doneTimer = () => {
-                this.setState({done: true})
-                const disappearTimer = () => {
-                    this.setState({goodbye: true})
-                }
-                setTimeout(disappearTimer, 1000)
-            }
-            setTimeout(doneTimer, 1)
-        }
-    }*/
-
     shouldComponentUpdate(newProps, nextState) {
-        console.log("State Char: " + this.state.char + " , props char: " + newProps.animCharacter)
         if (this.state.char !== newProps.animCharacter) {
-            console.log(newProps.id + "RENDERING")
             return true
         }
-        console.log(newProps.id + "Not RENDERING YEAH!")
         return false
     }
 
@@ -114,7 +77,6 @@ export class Pipe extends Component {
         })
 
         return (
-            //<text style={{fill: 'black', fontSize: 16}} ref={text => this.state.pipe = text}>{this.props.animCharacter}</text> 
             <text style={{ fill: 'black', fontSize: 16 }} ref={text => this.setState({ pipe: text })}>{this.props.animCharacter}</text>
         )
     }

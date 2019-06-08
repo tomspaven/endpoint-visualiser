@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {Pipe, PipeHeight} from './pipe'
 import Connections from '../connections/connections' 
-import { merge } from 'popmotion';
-//import TransitionGroup from 'react-transition-group/TransitionGroup'
 
 const epWidth = 200, epHeight = 150;
 
